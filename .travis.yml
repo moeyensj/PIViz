@@ -6,11 +6,16 @@ branches:
 python:
   - "3.6"
 
+before_install:
+  - brew update && brew install git-lfs
+  - git lfs install
+
 install:
   - pip install --upgrade setuptools
   - pip install -r requirements.txt
 
-before_script: git lfs pull
+before_script:
+  - git lfs pull
 
 script: 
   - py.test piviz --cov=piviz
