@@ -4,7 +4,11 @@ from astropy import visualization as aviz
 import matplotlib.pyplot as plt
 import numpy as np
 
-def generate_image(pmatrix,colors):
+__all__ = ["generate_image",
+           "generate_probmatrix",
+           "make_image_series"]
+
+def generate_image(pmatrix, colors):
     rand_mat = np.random.rand(pmatrix.shape[0],pmatrix.shape[1])
     image=np.zeros((pmatrix.shape[0],pmatrix.shape[1],3))
     for i in range((len(colors))):
