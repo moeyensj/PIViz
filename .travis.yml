@@ -7,7 +7,7 @@ python:
   - "3.6"
 
 before_install:
-  - brew update && brew install git-lfs
+  - pip install git-lfs
   - git lfs install
 
 install:
