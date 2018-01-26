@@ -8,37 +8,24 @@ __all__ = ["generate_image",
            "generate_probmatrix",
            "make_image_series"]
 
-def generate_image(pmatrix, colors):
+def generate_image(pmatrix,colors):
     rand_mat = np.random.rand(pmatrix.shape[0],pmatrix.shape[1])
     image=np.zeros((pmatrix.shape[0],pmatrix.shape[1],3))
     for i in range((len(colors))):
         image[(rand_mat<pmatrix[:,:,i])&~(image.any(axis=2))]=colors[i]
     return image
 
-def generate_probmatrix(data):
-  probmatrix=np.zeros((data['g'].data.shape[0],data['g'].data.shape[1],5))
-  brightness = np.ones((data['g'].data.shape[0],data['g'].data.shape[1]))
-  for i,filt in zip(range(5),'grizy'):
-      cdf=probmatrix[:,:,i-1]
-      probmatrix[:,:,i]=(data[filt].data/brightness)+cdf
-  return probmatrix
+def generate_probmatrix(data,filterlist=['g','r','i','z','y']):
+    brightness=np.zeros((data[filterlist[0]].data.shape[0],data[filterlist[0]].data.shape[1]))
+    for filt in data:
+        brightness+=data[filt].data
+    probmatrix=np.zeros((data[filterlist[0]].data.shape[0],data[filterlist[0]].data.shape[1],len(filterlist)))
+    for i,filt in zip(range(len(filterlist)),filterlist):
+        cdf=probmatrix[:,:,i-1]
+        probmatrix[:,:,i]=(data[filt].data/brightness)+cdf
+    return probmatrix,brightness
 
 
-# b cyan g  yel r
-
-
-#brightness=np.zeros_like(data['g'].data)
-#for filt in data:
-#    brightness+=data[filt].data
-#probmatrix=np.zeros((data['g'].data.shape[0],data['g'].data.shape[1],5))
-#for i,filt in zip(range(5),'grizy'):
-#    cdf=probmatrix[:,:,i-1]
-#    probmatrix[:,:,i]=(data[filt].data/brightness)+cdf
-#
-#print(np.max(probmatrix,axis=2))
-##probmatrix[probmatrix<0]=0
-#brightness=np.log(brightness)
-#brightness/=np.nanmax(brightness)
 
 def make_image_series(probmatrix,colors=None,brightness=None,output_dir='media/sf_LM_Shared/PIViz/',nimages=1000,basename='img'):
     #req_shape = (probmatrix.shape[0],probmatrix.shape[1],len(colors))
@@ -56,3 +43,4 @@ def make_image_series(probmatrix,colors=None,brightness=None,output_dir='media/s
         plt.close()
         if i % 10 == 0:
             print('Finished {} of {}...'.format(i+1,nimages))
+
