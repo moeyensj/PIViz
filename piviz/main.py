@@ -3,6 +3,8 @@ from astropy.io import fits
 from astropy import visualization as aviz
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.patches as mpatches
+
 
 __all__ = ["generate_image",
            "generate_probmatrix",
@@ -46,9 +48,14 @@ def make_image_series(probmatrix,colors=None,brightness=None,output_dir='media/s
     for i in range(nimages):
         colorVals=generate_image(probmatrix,colors)
         plt.imshow(colorVals*brightness[:, :,np.newaxis])
+        patches = []
+        for j,c in enumerate('grizy'):
+            patches.append(mpatches.Patch(color=np.array(colors[j])/255., label='{}'.format(c)))
+        plt.legend(handles=patches)
         plt.savefig(os.path.join(output_dir,'{}{:03d}.png'.format(basename,i)))
         plt.clf()
         plt.close()
         if i % 10 == 0:
             print('Finished {} of {}...'.format(i+1,nimages))
+
     print('Finished {} of {}...'.format(i+1,nimages))
