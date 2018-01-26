@@ -6,7 +6,15 @@ import numpy as np
 
 __all__ = ["generate_image",
            "generate_probmatrix",
-           "make_image_series"]
+           "make_image_series",
+           "load_from_files"]
+
+def load_from_files(filenames,filters):
+    data={filt:fits.open(filenames[i])[0] for i,filt in enumerate(filters)}
+    print(filenames)
+    print(filts)
+    print(data)
+    return data
 
 def generate_image(pmatrix,colors):
     rand_mat = np.random.rand(pmatrix.shape[0],pmatrix.shape[1])
@@ -43,4 +51,4 @@ def make_image_series(probmatrix,colors=None,brightness=None,output_dir='media/s
         plt.close()
         if i % 10 == 0:
             print('Finished {} of {}...'.format(i+1,nimages))
-
+    print('Finished {} of {}...'.format(i+1,nimages))
